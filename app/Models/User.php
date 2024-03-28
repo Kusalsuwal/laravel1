@@ -21,13 +21,16 @@ class User extends Authenticatable
 
 
 // Test.php (Model)
+
+
+    // protected $table = 'test';
+
+
     protected $fillable = [
         'name',
-        'number',
-        'address',
         'email',
-        'pan',
-        'password'
+        'password',
+        
     ];
 
 

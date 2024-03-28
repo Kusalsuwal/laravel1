@@ -14,6 +14,6 @@ Test extends Model
 
     protected $table = 'test';
 
-    protected $fillable = ['name', 'number', 'address', 'email', 'pan'];
+    protected $fillable = ['name', 'number', 'address', 'email', 'pan','image','username','password'];
 }
 

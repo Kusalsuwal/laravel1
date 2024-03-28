@@ -7,21 +7,18 @@ use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
-    public function test1()
-    {
+    // public function test1()
+    // {
 
-        $Test = Test::all();
+    //     $Test = Test::all();
 
-        dd($Test);
-    }
+    //     dd($Test);
+    // }
 
     public function test()
     {
 
-        $Test = Test::where('name', 'Prajul dai')->get();
-        $Test2 = Test::where('name', 'kusal suwal')->get();
-
-        return view('test', compact('Test', 'Test2'));
+        return view('test',);
 
     }
 

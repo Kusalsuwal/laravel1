@@ -75,12 +75,18 @@
         <button>Back</button></a>
 
 
-    <form method="POST" action="{{ route('form.update', $data['id']) }}">
+    <form method="POST" action="{{ route('form.update', $data['id']) }}"  enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" value="{{ $data['name'] }}">
+
+        <label for="username">username:</label>
+        <input type="text" id="username" name="username" value="{{ $data['username'] }}">
+        
+        <label for="password">password:</label>
+        <input type="text" id="password" name="password" value="{{ $data['password'] }}">
 
         <label for="number">Number:</label>
         <input type="text" id="number" name="number" value="{{ $data['number'] }}">
@@ -93,6 +99,16 @@
 
         <label for="pan">PAN:</label>
         <input type="text" id="pan" name="pan" value="{{ $data['pan'] }}">
+
+        <label for="image">Current Image:</label>
+        @if($data['image'])
+            <img src="{{ asset('uploads/students/' . $data['image']) }}" alt="Current Image" style="max-width: 100px; max-height: 100px;">
+        @else
+            <p>No image available</p>
+        @endif
+
+        <label for="new_image">New Image:</label>
+        <input type="file" id="new_image" name="new_image">
 
         <button type="submit">Update</button>
     </form>

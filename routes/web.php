@@ -8,7 +8,7 @@ use App\Http\Controllers\clientcontroller;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
-
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,10 +30,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-//Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 Route::get('/getclients',[clientcontroller::class,'getclient']);
-Route::get('/test1',[App\Http\Controllers\TestController::class,'test1'])->name('test1');
 Route::get('/test',[App\Http\Controllers\TestController::class,'test'])->name('test');
+
+Route::get('home', [FormController::class, 'home'])->name('homes');
+Route::get('/product', [FormController::class, 'product']);
+Route::get('/logins', [FormController::class, 'logins'])->name('logins');
+Route::post('/log', [FormController::class, 'login'])->name('log');
 
 
 
@@ -51,6 +54,8 @@ Route::post('/form/restore/{id}', [FormController::class, 'restores'])->name('fo
 
 
 
-Auth::routes();
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

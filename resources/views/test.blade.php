@@ -1,3 +1,6 @@
+@extends('nav')
+
+@section('content')
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +40,8 @@
         }
 
         input[type="text"],
-        input[type="email"] {
+        input[type="email"],
+        input[type="password"] {
             padding: 8px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
@@ -46,7 +50,8 @@
         }
 
         input[type="text"]:focus,
-        input[type="email"]:focus {
+        input[type="email"]:focus,
+        input[type="password"]:focus {
             outline: none;
             border-color: #007bff;
         }
@@ -70,14 +75,27 @@
 <div class="container">
     <h1>Registration form</h1>
     <a href="{{ route('form.index') }}" style="margin-right: -76px;margin-left: 351px;">
-        <button>Back</button></a>
-
-
-
-    <form method="POST" action="{{route('form.store') }}">
+        <button style="margin-left:-20px">Back</button></a>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+    <form method="POST" action="{{ route('form.store') }}" enctype="multipart/form-data">
         @csrf
+      
 
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+   
+        
 
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name">
 
@@ -93,10 +111,12 @@
         <label for="pan">PAN:</label>
         <input type="text" id="pan" name="pan">
 
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image">
+
         <button type="submit">Submit</button>
-
     </form>
-
 </div>
 </body>
 </html>
+@endsection

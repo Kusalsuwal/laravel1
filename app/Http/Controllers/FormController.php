@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Test;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreRequest;
+use Illuminate\Support\Facades\Storage;
 
+
+use App\Models\Test;
+use App\Models\User;
+use GuzzleHttp\Psr7\UploadedFile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class FormController extends Controller
 {
@@ -17,26 +25,33 @@ class FormController extends Controller
     {
         return view('form.index');
     }
+    public function store(StoreRequest $request)
+{
+    // Create new student record
+    $student = new Test;
+    $student->name = $request->input('name');
+    $student->number = $request->input('number');
+    $student->address = $request->input('address');
+    $student->email = $request->input('email');
+    $student->pan = $request->input('pan');
+    $student->username = $request->input('username');
+    $student->password = Hash::make($request->password);
 
-
-    public function store(Request $request)
-    {
-        $data = Test::create([
-            'name' => $request->name,
-            'number' => $request->number,
-            'address' => $request->address,
-            'email' => $request->email,
-            'pan' => $request->pan,
-
-
-        ]);
-
-        return redirect()->route('form.index')->with('success', 'Form submitted successfully!');
+    // Save student image if provided
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time().'.'.$extension;
+        $file->move('uploads/students/', $filename);
+        $student->image = $filename;
     }
 
+    // Save student record
+    $student->save();
 
 
-    //
+    return redirect()->route('form.index')->with('success', 'Form submitted successfully!');
+}
 
     public function edit($id)
     {
@@ -49,39 +64,38 @@ class FormController extends Controller
         return view('view', compact('data'));
     }
 
-
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $data = Test::findOrFail($id);
-        $data->update($request->all());
+        
+        $data->name = $request->name;
+        $data->username = $request->username;
+        $data->password = Hash::make($request->password);
+        $data->number = $request->number;
+        $data->address = $request->address;
+        $data->email = $request->email;
+        $data->pan = $request->pan;
+    
+        if ($request->hasFile('new_image')) {
+            if ($data->image) {
+                Storage::delete('uploads/students'. $data->image);
+            }
 
-        return redirect()->route('form.index')->with('success', 'Form updated successfully!');
+            $file = $request->file('new_image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time().'.'.$extension;
+            $file->move('uploads/students', $filename);
+            $data->image = $filename;
+        }
+
+    
+        $data->save();
+
+        return redirect()->route('form.index')->with('success', 'Data updated successfully.');
     }
 
-
-    public function delete($id)
-    {
-        $data = Test::findOrFail($id);
-        $data->delete();
-
-
-        return redirect()->route('form.index')->with('success', 'Record deleted successfully.');
-
-    }
-    public function restore()
-    {
-        $deletedData = Test::onlyTrashed()->get();
-
-        return view('restore', compact('deletedData'));
-    }
-
-//    public function restores($id)
-//    {
-//        dd($id);
-////        $deletedData = Test::onlyTrashed()->get();
-////
-////        return view('restore', compact('deletedData'));
-//    }
+   
     public function restores($id)
     {
 
@@ -99,6 +113,60 @@ class FormController extends Controller
             return redirect()->route('form.restore');
         }
     }
+    public function home()
+    {
+        return view('home');
+    }
+    public function product()
+    {
+        return view('products');
+    }
 
+
+public function delete($id)
+{
+    $data = Test::findOrFail($id);
+    $data->delete();
+
+
+    return redirect()->route('form.index')->with('success', 'Record deleted successfully.');
 
 }
+public function restore()
+{
+    $deletedData = Test::onlyTrashed()->get();
+
+    return view('restore', compact('deletedData'));
+}
+
+
+public function logins(Request $request){
+    return view('logins');
+
+}
+
+public function login(Request $request){
+        $username = $request->username;
+        $password = $request->password;
+    
+        $test = Test::where('username', $username)->first();
+       
+        if ($test && Hash::check($password, $test->password)) {
+            return $this->index();
+        } else {
+                return redirect()->route('logins')->with('error', 'Invalid password .');
+    
+            // Authentication failed
+            // return redirect()->back()->withErrors(['username' => 'Invalid username or password.']);
+        }
+
+}
+
+
+    // return view('logins');
+}
+
+
+
+
+

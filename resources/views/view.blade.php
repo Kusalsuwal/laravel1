@@ -33,22 +33,27 @@
         <th>Address</th>
         <th>Email</th>
         <th>PAN</th>
+        <th>Image</th>
         <th>Created At</th>
         <th>Updated At</th>
     </tr>
     <tr>
-        @php
-            $data = json_decode($data, true);
-        @endphp
-        <td>{{ $data['id'] }}</td>
-        <td>{{ $data['name'] }}</td>
-        <td>{{ $data['number'] }}</td>
-        <td>{{ $data['address'] }}</td>
-        <td>{{ $data['email'] }}</td>
-        <td>{{ $data['pan'] }}</td>
-        <td>{{ $data['created_at'] }}</td>
-        <td>{{ $data['updated_at'] }}</td>
-    </tr>
+    @php
+        $data = json_decode($data, true);
+    @endphp
+    <td>{{ $data['id'] }}</td>
+    <td>{{ $data['name'] }}</td>
+    <td>{{ $data['number'] }}</td>
+    <td>{{ $data['address'] }}</td>
+    <td>{{ $data['email'] }}</td>
+    <td>{{ $data['pan'] }}</td>
+    <td>
+    <img src="{{ $data['image'] }}" alt="Image" /> 
+    </td>
+    <td>{{ $data['created_at'] }}</td>
+    <td>{{ $data['updated_at'] }}</td>
+</tr>
+
 </table>
 </body>
 </html>

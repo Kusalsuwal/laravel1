@@ -1,15 +1,16 @@
+<!-- @extends('nav') -->
+
+@section('content')
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration List</title>
-    <link href="/bootstrap-5.3.3-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="{{ asset('/bootstrap-5.3.3-dist/css/bootstrap.css') }}" rel="stylesheet">
     <!-- Include SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
-<body>
 <style>
     .alert {
         padding: 15px;
@@ -28,65 +29,134 @@
         cursor: pointer;
         font-weight: bold;
     }
+
+    /* Styles for action buttons */
+    .action-btn {
+        font-weight: bold;
+        padding: 1px 12px;
+        border-radius: 5px;
+        color: #000000;
+        text-decoration: none;
+        margin-right: 8px;
+    }
+
+    .edit-btn {
+        background-color: yellow;
+    }
+
+    .view-btn {
+        background-color: deepskyblue;
+    }
+
+    .delete-btn {
+        background-color: orangered;
+    }
+
+    .btn-icon {
+        margin-right: 5px;
+    }
+
+    /* Styles for positioning table and buttons */
+    .container {
+        margin-top: 50px;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
 </style>
 
-@if (session('success'))
-    <div id="successMessage" class="alert alert-success">
-        {{ session('success') }}
-        <span class="close-btn" onclick="closeAlert()">&times;</span>
+<body>
+
+<div class="container" style="margin-left: 15px">
+    @if (session('success'))
+        <div id="successMessage" class="alert alert-success">
+            {{ session('success') }}
+            <span class="close-btn" onclick="closeAlert()">&times;</span>
+        </div>
+    @endif
+
+    <h1 style="margin-left: 280px;">List of Users</h1>
+
+    <!-- New button for registration -->
+    <div style="margin-left: auto; margin-bottom: 10px;">
+    <a href="{{ route('test') }}" class="btn btn-primary btn-lg" style="margin-left:1060px;">+</a>
+</div>
+
+
+
+    <div class="table-container">
+        <table class="table" border="5">
+            <thead>
+            <tr>
+                <th>SN</th>
+                <th>Name</th>
+                <th>Number</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Pan</th>
+                <th>Username</th>
+                <!-- <th>Password</th> -->
+                <th>image</th>
+
+
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($test as $key=> $co)
+            
+                <tr>
+                    <td>{{ $key+1 }}</td>
+                    <td>{{ $co->name }}</td>
+                    <td>{{ $co->number }}</td>
+                    <td>{{ $co->address }}</td>
+                    <td>{{ $co->email }}</td>
+                    <td>{{ $co->pan }}</td>
+                    <td>{{ $co->username }}</td>
+                    <!-- <td>{{ $co->password }}</td> -->
+                    
+                    <td>
+                    <img src="{{ asset('uploads/students/' . $co->image) }}" alt="Image" style="max-width: 100px; max-height: 100px;" /> 
+                    </td>
+                    <td>
+                        <a href="{{ route('form.edit', $co->id) }}" class="action-btn edit-btn">
+                            <i class="btn-icon bi bi-pencil"></i>Edit
+                        </a>
+                        <a href="{{ route('form.view', $co->id) }}" class="action-btn view-btn">
+                            <i class="btn-icon bi bi-eye"></i>View
+                        </a>
+                        <a href="{{ route('form.delete', $co->id) }}" class="action-btn delete-btn" onclick="deleteConfirmation(event)">
+                            <i class="btn-icon bi bi-trash"></i>Delete
+                        </a>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
     </div>
-@endif
+</div>
 
-<h1>Registration List</h1>
 
-<a href="{{ route('test') }}" style="margin-right: -76px;margin-left: 525px;">
-    <button>Create</button>
-</a>
-<a href="{{ route('form.restore') }}" style="margin-right: 1px; margin-left: -50px;">
-    <button>Restore</button>
-</a>
-
-<table border="1">
-    <thead>
-    <tr>
-        <th>SN</th>
-        <th>Name</th>
-        <th>Number</th>
-        <th>Address</th>
-        <th>Email</th>
-        <th>Pan</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-
-    @foreach($test as $key=> $co)
-        <tr>
-            <td>{{ $key+1 }}</td>
-            <td>{{ $co->name }}</td>
-            <td>{{$co->number}}</td>
-            <td>{{$co->address}}</td>
-            <td>{{$co->email}}</td>
-            <td>{{$co->pan}}</td>
-            <td>
-                <a href="{{ route('form.edit', $co->id) }}" style="background-color: yellow; padding: -1px 10px;">Edit</a>
-                <a href="{{ route('form.view', $co->id) }}" style="background-color: blue; padding: -1px 10px;">View</a>
-                <a href="{{ route('form.delete', $co->id) }}" style="background-color: Red; padding: -1px 10px;" onclick="deleteConfirmation(event)">Delete</a>
-            </td>
-        </tr>
-    @endforeach
-
-    </tbody>
-</table>
-
-<script src="/bootstrap-5.3.3-dist/js/bootstrap.js" ></script>
+<script src="{{ asset('/bootstrap-5.3.3-dist/js/bootstrap.js') }}"></script>
 
 <script>
-
     function deleteConfirmation(event) {
         event.preventDefault();
         const deleteUrl = event.target.href;
-
 
         Swal.fire({
             title: 'Are you sure?',
@@ -109,3 +179,4 @@
 </script>
 </body>
 </html>
+@endsection

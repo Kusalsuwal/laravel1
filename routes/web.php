@@ -28,6 +28,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Auth::logout();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/getclients',[clientcontroller::class,'getclient']);
@@ -37,6 +38,8 @@ Route::get('home', [FormController::class, 'home'])->name('homes');
 Route::get('/product', [FormController::class, 'product']);
 Route::get('/logins', [FormController::class, 'logins'])->name('logins');
 Route::post('/log', [FormController::class, 'login'])->name('log');
+Route::post('/logout', [FormController::class, 'logout'])->name('logout');
+
 
 
 

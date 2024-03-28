@@ -18,6 +18,7 @@ class FormController extends Controller
 {
     public function index()
     {
+
         $test = Test::all();
         return view('profile', compact('test'));
     }
@@ -121,7 +122,7 @@ class FormController extends Controller
     {
         return view('products');
     }
-
+ 
 
 public function delete($id)
 {
@@ -145,6 +146,8 @@ public function logins(Request $request){
 
 }
 
+
+
 public function login(Request $request){
         $username = $request->username;
         $password = $request->password;
@@ -152,8 +155,12 @@ public function login(Request $request){
         $test = Test::where('username', $username)->first();
        
         if ($test && Hash::check($password, $test->password)) {
-            return $this->index();
+            return redirect()->route('homes');
+
+            // return view('home');
+            // return $this->index();
         } else {
+            // dd($request->all());
                 return redirect()->route('logins')->with('error', 'Invalid password .');
     
             // Authentication failed
@@ -162,8 +169,19 @@ public function login(Request $request){
 
 }
 
+public function logout(Request $request)
+{
+    
+    Auth()->logout();
 
-    // return view('logins');
+    $request->session()->flush();
+
+    $request->session()->regenerate();
+
+    return redirect()->route('form.index');
+}
+
+
 }
 
 
